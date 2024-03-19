@@ -1,9 +1,11 @@
 package br.com.coffeeandit.transactionsvc.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -16,6 +18,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "uuid")
+@ToString(of = {"uuid", "situacaoEnum"})
 public class TransactionDto {
 
     @Id
@@ -32,4 +35,23 @@ public class TransactionDto {
     @NotNull(message = "Informar o tipo da transação")
     private TipoTransacao tipoTransacao;
     private SituacaoEnum situacaoEnum;
+
+    public void suspeitaFraude(){
+        situacaoEnum = SituacaoEnum.EM_SUSPEITA_FRAUDE;
+    }
+
+    public void analiseHumana(){
+        situacaoEnum = SituacaoEnum.EM_ANALISE_HUMANA;
+    }
+
+    public void analisada(){
+        situacaoEnum = SituacaoEnum.ANALISADA;
+    }
+    @JsonIgnore
+    public boolean isAnalisada(){
+        return getSituacaoEnum().equals(SituacaoEnum.ANALISADA);
+    }
+    public void aprovar(){
+        situacaoEnum = SituacaoEnum.APROVADA;
+    }
 }
